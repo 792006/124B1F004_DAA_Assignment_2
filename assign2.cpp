@@ -1,85 +1,47 @@
-#include <iostream>
+#include<vector>
+#include<algorithm>
 using namespace std;
-
-void merge(int arr[], int left, int mid, int right)
-{
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-
-    int* L = new int[n1];
-    int* R = new int[n2];
-
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
-
-    int i = 0, j = 0, k = left;
-
-    while (i < n1 && j < n2)
-    {
-        if (L[i] <= R[j])
-        {
-            arr[k] = L[i];
-            i++;
+int partition(vector<int> &arr,int lb,int ub){
+        int pivot=arr[lb];
+        int start=lb;
+        int end=ub;
+        while(start<end){
+                while(start<=ub && arr[start]<=pivot){
+                        start++;
+                }
+                while(end>=lb && arr[end]>pivot){
+                        end--;
+                }
+                if(start<end){
+                        swap(arr[start],arr[end]);
+                }
         }
-        else
-        {
-            arr[k] = R[j];
-            j++;
+        swap(arr[lb],arr[end]);
+        return end;
+}
+void quickSort(vector<int> &v,int lb,int ub){
+        if(lb>=ub){
+                return;
         }
-        k++;
-    }
-
-    while (i < n1)
-    {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-
-    while (j < n2)
-    {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-
-    delete[] L;
-    delete[] R;
+        int loc=partition(v,lb,ub);
+        quickSort(v,lb,loc-1);
+        quickSort(v,loc+1,ub);
 }
-
-void mergeSort(int arr[], int left, int right)
-{
-    if (left >= right)
-        return;
-
-    int mid = left + (right - left) / 2;
-
-    mergeSort(arr, left, mid);
-    mergeSort(arr, mid + 1, right);
-    merge(arr, left, mid, right);
-}
-
-int main()
-{
-    int arr[] = {38, 27, 43, 3, 9, 82, 10, 15, 6, 21};
-    int n = sizeof(arr) / sizeof(arr[0]);
-
-    cout << "Original Dataset:" << endl;
-
-    for (int i = 0; i < n; i++)
-        cout << arr[i] << " ";
-
-    mergeSort(arr, 0, n - 1);
-
-    cout << "\n\nSorted Dataset:" << endl;
-
-    for (int i = 0; i < n; i++)
-        cout << arr[i] << " ";
-
-    cout << endl;
-
-    return 0;
+int main(){
+        vector<int> arr(10);
+        cout<<"Enter the Elements:\n";
+        for(int i=0;i<arr.size();i++){
+                cout<<"Enter element at "<<i<<" :";
+                cin>>arr[i];
+        }
+        cout<<"Array Now :";
+        for(int i=0;i<arr.size();i++){
+                cout<<arr[i]<<" ";
+        }
+        cout<<endl;
+        quickSort(arr,0,arr.size()-1);
+        cout<<"Array Then: ";
+        for(int i=0;i<arr.size();i++){
+                cout<<arr[i]<<" ";
+        }
 }
